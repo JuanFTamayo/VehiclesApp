@@ -12,8 +12,38 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Login screen')
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _showLogo(),
+            _showEmail(),
+          ],
+        )
         ),
+    );
+  }
+
+  Widget _showLogo() {
+    return Image(
+      image: AssetImage('assets/Logo.png'),
+      width: 300,
+      );
+  }
+
+  Widget _showEmail() {
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: TextField(
+        autofocus: true,
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+         hintText: 'Ingresa tu email...' ,
+         labelText: 'Email',
+         suffixIcon: Icon(Icons.email),
+         border: OutlineInputBorder(
+           borderRadius: BorderRadius.circular(10) )
+        ),
+      ),
     );
   }
 }
