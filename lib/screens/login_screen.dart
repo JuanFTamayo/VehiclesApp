@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -9,9 +10,15 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 String _email= '';
-String _password='';
-bool _rememberme= true;
+String _emailError='';
+bool _emailShowError= false;
 
+String _password='';
+String _passwordError='';
+bool _passwordShowError= false;
+
+bool _rememberme= true;
+bool _passwordShow = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +41,7 @@ bool _rememberme= true;
   Widget _showLogo() {
     return Image(
       image: AssetImage('assets/Logo.png'),
-      width: 300,
+      width: 250,
       );
   }
 
@@ -47,6 +54,8 @@ bool _rememberme= true;
         decoration: InputDecoration(
          hintText: 'Ingresa tu email...' ,
          labelText: 'Email',
+         errorText: _emailShowError? _emailError: null,
+         prefixIcon: Icon(Icons.alternate_email),
          suffixIcon: Icon(Icons.email),
          border: OutlineInputBorder(
            borderRadius: BorderRadius.circular(10) )
@@ -64,11 +73,22 @@ bool _rememberme= true;
      return Container(
       padding: EdgeInsets.all(10),
       child: TextField(
-        obscureText: true,
+        obscureText: !_passwordShow,
         decoration: InputDecoration(
          hintText: 'Ingresa tu contraseña...' ,
          labelText: 'Contraseña',
-         suffixIcon: Icon(Icons.lock),
+         errorText: _passwordShowError? _passwordError: null,
+         prefixIcon: Icon(Icons.lock),
+         suffixIcon: IconButton(
+            icon: _passwordShow? Icon(Icons.visibility) : Icon(Icons.visibility_off),
+           onPressed: () {
+             setState(() {
+               _passwordShow =! _passwordShow;
+             });
+             
+           },
+           
+            ),
          border: OutlineInputBorder(
            borderRadius: BorderRadius.circular(10) )
         ),
@@ -111,7 +131,7 @@ bool _rememberme= true;
               }
              ),
             ),
-            onPressed: () {},
+            onPressed: () => _login(),
              
              ),
           ),
@@ -119,7 +139,7 @@ bool _rememberme= true;
           SizedBox(width: 20,),
              Expanded(
                child: ElevatedButton(
-            child: Text('nuevo usuario'),
+            child: Text('Nuevo Usuario'),
             style: ButtonStyle(
               backgroundColor:MaterialStateProperty.resolveWith<Color>(
               (Set <MaterialState> states ){
@@ -135,5 +155,45 @@ bool _rememberme= true;
       ],
       ),
     );
+  }
+
+  void _login() {
+    if (! _validateFields()) {
+      return;
+    }
+  }
+
+  bool _validateFields() {
+    bool hasErrors= false;
+    if (_email.isEmpty) {
+      hasErrors=true;
+      _emailShowError = true;
+      _emailError = 'Debes ingresar tu email';
+      
+    }else if (!EmailValidator.validate(_email)) {
+       hasErrors=true;
+      _emailShowError = true;
+      _emailError = 'Debes ingresar un email valido';
+    }
+    else{
+      _emailShowError= false;
+    }
+
+    if (_password.isEmpty) {
+      hasErrors=true;
+      _passwordShowError = true;
+      _passwordError = 'Debes ingresar tu contraseña';
+      
+    }else if (_password.length<6) {
+       hasErrors=true;
+      _passwordShowError = true;
+      _passwordError = 'Debes ingresar una contraseña de almenos 6 caracteres';
+    }
+    else{
+      _passwordShowError= false;
+    }
+
+    setState(() {});
+    return hasErrors;
   }
 }
