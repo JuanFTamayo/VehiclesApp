@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:vehicles_app/components/loader_component.dart';
 import 'package:vehicles_app/helpers/constans.dart';
 import 'package:vehicles_app/models/token.dart';
+import 'package:vehicles_app/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({ Key? key }) : super(key: key);
@@ -15,11 +17,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-String _email= '';
+String _email= 'luis@yopmail.com';
 String _emailError='';
 bool _emailShowError= false;
 
-String _password='';
+String _password='123456';
 String _passwordError='';
 bool _passwordShowError= false;
 
@@ -215,7 +217,12 @@ bool _showLoader= false;
     var body= response.body;
     var decodeJson = jsonDecode(body);
     var token = Token.fromJson(decodeJson);
-    print(token.token);
+    Navigator.pushReplacement(
+      context,
+       MaterialPageRoute(
+         builder: (context)=> HomeScreen(token: token,)
+         )
+    );
   }
 
   bool _validateFields() {
