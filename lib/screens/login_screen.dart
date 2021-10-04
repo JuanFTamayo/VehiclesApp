@@ -215,8 +215,8 @@ bool _showLoader= false;
     }
 
     var body= response.body;
-    var decodeJson = jsonDecode(body);
-    var token = Token.fromJson(decodeJson);
+    var decodedJson = jsonDecode(body);
+    var token = Token.fromJson(decodedJson);
     Navigator.pushReplacement(
       context,
        MaterialPageRoute(
