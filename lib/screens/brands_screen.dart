@@ -1,26 +1,27 @@
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:vehicles_app/components/loader_component.dart';
 import 'package:vehicles_app/helpers/api_helper.dart';
+import 'package:vehicles_app/models/brand.dart';
 import 'package:vehicles_app/models/procedure.dart';
 import 'package:vehicles_app/models/response.dart';
 import 'package:vehicles_app/models/token.dart';
+import 'package:vehicles_app/screens/brand_screen.dart';
 import 'package:vehicles_app/screens/procedure_screen.dart';
 
-class ProceduresScreen extends StatefulWidget {
+class BrandsScreen extends StatefulWidget {
   final Token token;
 
-  ProceduresScreen({required this.token});
+  BrandsScreen({required this.token});
 
   @override
-  _ProceduresScreenState createState() => _ProceduresScreenState();
+  _BrandsScreenState createState() => _BrandsScreenState();
 }
 
-class _ProceduresScreenState extends State<ProceduresScreen> {
-  List <Procedure> _procedures = [];
+class _BrandsScreenState extends State<BrandsScreen> {
+  List <Brand> _brands = [];
   bool _showLoader= false;
   bool _isFiltered= false;
   String _search = '';
@@ -28,14 +29,14 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
   @override
   void initState() { 
     super.initState();
-    _getProcedures();
+    _getBrands();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text('Procedimientos'),
+        title:Text('Marcas'),
         actions: <Widget>[
             _isFiltered
             ? IconButton(
@@ -58,12 +59,12 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
     );
   }
 
-  Future<Null> _getProcedures() async {
+  Future<Null> _getBrands() async {
     setState(() {
       _showLoader=true;
     });
 
-    Response response= await ApiHelper.getProcedures(widget.token.token);
+    Response response= await ApiHelper.getBrands(widget.token.token);
     
     setState(() {
         _showLoader=false;
@@ -81,12 +82,12 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
       return;
     }
       setState(() {
-        _procedures=response.result;
+        _brands=response.result;
       });
   }
 
   Widget _getContent() {
-    return _procedures.length==0
+    return _brands.length==0
     ? _noContent()
     :_getListView();
   }
@@ -97,8 +98,8 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
         margin: EdgeInsets.all(20),
         child: Text(
           _isFiltered
-          ?'No hay procedimientos con ese criterio de busqueda'
-          :'No hay procedimietos registrados',
+          ?'No hay marcas con ese criterio de busqueda'
+          :'No hay marcas registradas',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold
@@ -110,9 +111,9 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
 
   Widget _getListView() {
     return RefreshIndicator(
-      onRefresh: _getProcedures,
+      onRefresh: _getBrands,
       child: ListView(
-        children: _procedures.map((e) {
+        children: _brands.map((e) {
           return Card(
             child: InkWell(
               onTap: () => _goEdit(e),
@@ -133,17 +134,7 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
                         Icon(Icons.arrow_forward_ios),
                       ],
                     ),
-                    SizedBox(height: 5,),
-                    Row(
-                      children: [
-                        Text(
-                          '${NumberFormat.currency(symbol:'\$').format(e.price)}',
-                          style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+                    
                   ],
                 ),
               ),
@@ -163,11 +154,11 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
           ),
-          title: Text('Filtrar procedimientos'),
+          title: Text('Filtrar marcas'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Text('Escriba las primeras letras del procedimiento'),
+              Text('Escriba las primeras letras de la marca'),
               SizedBox(height: 10,),
               TextField(
                 autofocus: true,
@@ -203,22 +194,22 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
      _isFiltered=false;
      
    });
-   _getProcedures();
+   _getBrands();
  }
 
   void _filter() {
     if (_search.isEmpty) {
       return;
     }
-    List<Procedure> filteredList= [];
-    for (var procedure in _procedures) {
-      if (procedure.description.toLowerCase().contains(_search.toLowerCase())) {
-        filteredList.add(procedure);
+    List<Brand> filteredList= [];
+    for (var brand in _brands) {
+      if (brand.description.toLowerCase().contains(_search.toLowerCase())) {
+        filteredList.add(brand);
       }
     }
 
     setState(() {
-      _procedures= filteredList;
+      _brands= filteredList;
       _isFiltered= true;
 
     });
@@ -230,29 +221,29 @@ class _ProceduresScreenState extends State<ProceduresScreen> {
     String? result= await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context)=> ProcedureScreen(
+              builder: (context)=> BrandScreen(
                 token: widget.token,
-                  procedure: Procedure(description: '', id:0, price: 0),
+                  brand: Brand(description: '', id:0),
               )
             )
           );
           if (result=='yes') {
-            _getProcedures();
+            _getBrands();
           }
   }
 
-  void _goEdit(Procedure procedure) async {
+  void _goEdit(Brand brand) async {
     String? result= await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context)=> ProcedureScreen(
+                  builder: (context)=> BrandScreen(
                     token: widget.token,
-                    procedure: procedure,
+                    brand: brand,
                   )
                 )
               );
               if (result=='yes') {
-            _getProcedures();
+            _getBrands();
           }
   }
 }
