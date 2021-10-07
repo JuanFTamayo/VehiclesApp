@@ -1,15 +1,14 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import 'package:vehicles_app/components/loader_component.dart';
 import 'package:vehicles_app/helpers/api_helper.dart';
 import 'package:vehicles_app/models/brand.dart';
-import 'package:vehicles_app/models/procedure.dart';
+
 import 'package:vehicles_app/models/response.dart';
 import 'package:vehicles_app/models/token.dart';
 import 'package:vehicles_app/screens/brand_screen.dart';
-import 'package:vehicles_app/screens/procedure_screen.dart';
+
 
 class BrandsScreen extends StatefulWidget {
   final Token token;

@@ -1,10 +1,10 @@
-class DocumentType{
-  int id=0;
-  String description='';
+class VehicleType {
+  int id = 0;
+  String description = '';
 
-  DocumentType({required this.id, required this.description});
+  VehicleType({required this.id, required this.description});
 
-  DocumentType.fromJson(Map<String, dynamic> json) {
+  VehicleType.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     description = json['description'];
   }
