@@ -29,23 +29,26 @@ bool _rememberme= true;
 bool _passwordShow = false;
 
 bool _showLoader= false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children:<Widget> [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children:<Widget>[
-              
-                  _showLogo(),
-                  SizedBox(height: 20,),
-                  _showEmail(),
-                  _showPassword(),
-                  _showRememberme(),
-                  _showButtons(),
-                ],
-              ),
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:<Widget>[
+                    SizedBox(height: 40,),
+                    _showLogo(),
+                    SizedBox(height: 20,),
+                    _showEmail(),
+                    _showPassword(),
+                    _showRememberme(),
+                    _showButtons(),
+                  ],
+                ),
+          ),
               _showLoader? LoaderComponent(text: 'por favor espere...',) : Container(),  
             ], 
             ),
